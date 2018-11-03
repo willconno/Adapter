@@ -23,7 +23,7 @@ abstract class Adapter(context: Context): RecyclerView.Adapter<RecyclerView.View
      *
      */
     final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        if (viewType < 0){ // headers are 1 indexed in negatives
+        if (viewType < 0){
             return headerViewHolder((viewType * -1) - 1, parent)
         }
 
@@ -42,7 +42,7 @@ abstract class Adapter(context: Context): RecyclerView.Adapter<RecyclerView.View
     }
 
     /**
-     * Header view holders are negative -1 indexed
+     * Header view holders are negative integers -1 indexed
      */
     final override fun getItemViewType(position: Int): Int {
         if (isSection(position)){
