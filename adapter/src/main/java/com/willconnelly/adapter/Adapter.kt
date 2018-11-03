@@ -15,7 +15,7 @@ import android.widget.TextView
 abstract class Adapter(context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     /**
-     * Public {@link LayoutInflater} for ViewHolder inflation
+     * Public @see LayoutInflater for ViewHolder inflation
      */
     val inflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -73,7 +73,7 @@ abstract class Adapter(context: Context): RecyclerView.Adapter<RecyclerView.View
     }
 
     /**
-     * Override and cast to custom viewHolder
+     *
      */
     abstract fun numberOfSections(): Int
 
@@ -105,7 +105,8 @@ abstract class Adapter(context: Context): RecyclerView.Adapter<RecyclerView.View
     }
 
     /**
-     * if {@link #headerViewHolder(Int, ViewGroup)} is undefined, inflate libraries HeaderViewHolder
+     * if Adapter.headerViewHolder(Int, ViewGroup) is undefined, this is the default
+     * @see Adapter.headerViewHolder(Int, ViewGroup)
      */
     protected open fun headerViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder {
         return HeaderViewHolder(inflater.inflate(R.layout.header_view_holder, parent, false))
@@ -113,6 +114,7 @@ abstract class Adapter(context: Context): RecyclerView.Adapter<RecyclerView.View
 
     /**
      * @return section number from ViewHolder.adapterPosition
+     * @see RecyclerView.ViewHolder.getAdapterPosition
      */
     fun getSectionFrom(position: Int): Int {
 

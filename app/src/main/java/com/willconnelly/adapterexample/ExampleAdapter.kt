@@ -69,9 +69,7 @@ class ExampleAdapter(context: Context): Adapter(context){
         if (p0 is HEADER3){
             p0.background.setBackgroundColor(p0.itemView.context.resources.getColor(R.color.red_300))
         }
-
     }
-
 }
 
 class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
