@@ -30,7 +30,7 @@ class ExampleAdapter(context: Context): Adapter(context){
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, section: Int, row: Int) {
         (holder as? ViewHolder)?.let{
-            it.textView.text = "Section: $section  -  Position $row"
+            it.textView.text = "Section: $section  -  Position: $row"
         }
     }
 
@@ -51,6 +51,7 @@ class ExampleAdapter(context: Context): Adapter(context){
         when (section){
             0->return HEADER1(inflater.inflate(R.layout.header_view_holder_1, parent, false))
             1->return HEADER2(inflater.inflate(R.layout.header_view_holder_2, parent, false))
+            2->return HEADER3(inflater.inflate(R.layout.header_view_holder_3, parent, false))
         }
 
         return super.headerViewHolder(section, parent)
