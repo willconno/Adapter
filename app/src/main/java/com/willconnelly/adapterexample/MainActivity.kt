@@ -5,6 +5,11 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 
+/**
+ * Created by William Connelly on 3/11/2018.
+ *
+ * connelly.william@gmail.com
+ */
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

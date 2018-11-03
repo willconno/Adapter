@@ -10,26 +10,30 @@ import android.widget.TextView
 /**
  * Created by William Connelly on 3/11/2018.
  *
- *ClientVault Pty Ltd.
- *william@clientvault.com
+ * connelly.william@gmail.com
  */
 abstract class Adapter(context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    val _inflater: LayoutInflater = LayoutInflater.from(context)
+    /**
+     * Public {@link LayoutInflater} for ViewHolder inflation
+     */
+    val inflater: LayoutInflater = LayoutInflater.from(context)
 
-    val HEADER = -1
-    val CUSTOM = -2
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        if (viewType == HEADER){
-            return HeaderViewHolder(_inflater.inflate(R.layout.header_view_holder, parent, false))
+    /**
+     *
+     */
+    final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        if (viewType < 0){ // headers are 1 indexed in negatives
+            return headerViewHolder((viewType * -1) - 1, parent)
         }
 
-        val viewViewHolder = viewHolderFor(viewType, parent)
-        return viewViewHolder!!
+        return viewHolderFor(viewType, parent)!!
     }
 
-    override fun getItemCount(): Int {
+    /**
+     *
+     */
+    final override fun getItemCount(): Int {
         var result = 0
         for (count in 0 until numberOfSections()){
             result += numberOfRowsIn(count)
@@ -37,19 +41,34 @@ abstract class Adapter(context: Context): RecyclerView.Adapter<RecyclerView.View
         return result + numberOfSections()
     }
 
-    override fun getItemViewType(position: Int): Int {
+    /**
+     * Header view holders are negative -1 indexed
+     */
+    final override fun getItemViewType(position: Int): Int {
         if (isSection(position)){
-            return HEADER
+            return (getSectionFrom(position) + 1) * -1
         }
 
         return getSectionFrom(position)
     }
 
-    override fun onBindViewHolder(p0: RecyclerView.ViewHolder, position: Int) {
-        if (p0 is HeaderViewHolder){
-            p0.textView.text = titleForHeaderInSection(getSectionFrom(position))
+    /**
+     * Calculate ViewHolder type, row and section and pass to public onBindViewHolder methods
+     */
+    final override fun onBindViewHolder(p0: RecyclerView.ViewHolder, position: Int) {
+        if (isSection(position)){
+            onBindHeaderViewHolder(p0, getSectionFrom(position))
         } else {
             onBindViewHolder(p0, getSectionFrom(position), getRowFrom(position))
+        }
+    }
+
+    /**
+     * Override to customise default HeaderViewHolder or custom ViewHolder for header in section
+     */
+    protected open fun onBindHeaderViewHolder(p0: RecyclerView.ViewHolder, section: Int){
+        if (p0 is HeaderViewHolder) {
+            p0.textView.text = titleForHeaderInSection(section)
         }
     }
 
@@ -57,23 +76,45 @@ abstract class Adapter(context: Context): RecyclerView.Adapter<RecyclerView.View
      * Override and cast to custom viewHolder
      */
     abstract fun numberOfSections(): Int
+
+    /**
+     * This method is taken from onBindViewHolder includes section and row positions
+     */
     abstract fun onBindViewHolder(holder: RecyclerView.ViewHolder, section: Int, row: Int)
+
+    /**
+     * Required to calculate section and row index
+     */
     abstract fun numberOfRowsIn(section: Int): Int
 
-//    abstract fun viewForHeaderIn(section: Int) : RecyclerView.ViewHolder? //todo
-    protected open fun titleForHeaderInSection(section: Int): String {return ""}
-
+    /**
+     * Standard ViewHolder implementation
+     */
     abstract fun viewHolderFor(section: Int, parent: ViewGroup) : RecyclerView.ViewHolder?
 
-//    private fun getItemViewTypes(): List<RecyclerView.ViewHolder?> {
-//        val result = ArrayList<RecyclerView.ViewHolder?>()
-//        for (i in 0..numberOfSections()) {
-//            result.add(viewHolderFor(i))
-//        }
-//        return result
-//    }
+    /**
+     * When using the libraries HeaderViewHolder this method return the title to be displayed
+     */
+    protected open fun titleForHeaderInSection(section: Int): String {return ""}
 
-    private fun getSectionFrom(position: Int): Int {
+    /**
+     * Override to customise the header for a specific section.
+     */
+    protected open fun headerViewHolder(section: Int, parent: ViewGroup) : RecyclerView.ViewHolder {
+        return headerViewHolder(parent)
+    }
+
+    /**
+     * if {@link #headerViewHolder(Int, ViewGroup)} is undefined, inflate libraries HeaderViewHolder
+     */
+    protected open fun headerViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder {
+        return HeaderViewHolder(inflater.inflate(R.layout.header_view_holder, parent, false))
+    }
+
+    /**
+     * @return section number from ViewHolder.adapterPosition
+     */
+    fun getSectionFrom(position: Int): Int {
 
         var totalCount = 0
 
@@ -84,13 +125,15 @@ abstract class Adapter(context: Context): RecyclerView.Adapter<RecyclerView.View
             if (position == section || position <= totalCount + section) {
                 return section
             }
-
         }
 
         return 0
     }
 
-    open fun getRowFrom(position: Int): Int {
+    /**
+     * @return row number from ViewHolder.adapterPosition
+     */
+    fun getRowFrom(position: Int): Int {
         var totalCount = 0
 
         for (section in 0..getSectionFrom(position)) {
@@ -109,6 +152,9 @@ abstract class Adapter(context: Context): RecyclerView.Adapter<RecyclerView.View
         return 0
     }
 
+    /**
+     * Determine when adapterPosition is section
+     */
     private fun isSection(position: Int): Boolean {
         if (position == 0) return true
 
