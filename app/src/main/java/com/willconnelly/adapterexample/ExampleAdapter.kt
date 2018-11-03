@@ -35,7 +35,7 @@ class ExampleAdapter(context: Context): Adapter(context){
     }
 
     override fun numberOfRowsIn(section: Int): Int {
-        return 3
+        return section + 1
     }
 
     override fun numberOfSections(): Int {
@@ -43,7 +43,7 @@ class ExampleAdapter(context: Context): Adapter(context){
     }
 
     override fun titleForHeaderInSection(section: Int): String {
-        return "Section $section"
+        return "Section ${section + 1}"
     }
 
     override fun headerViewHolder(section: Int, parent: ViewGroup): RecyclerView.ViewHolder {
