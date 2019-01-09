@@ -12,7 +12,7 @@ import android.widget.TextView
  *
  * connelly.william@gmail.com
  */
-abstract class Adapter(context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+abstract class Adapter(context: Context?): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     /**
      * Public @see LayoutInflater for ViewHolder inflation
@@ -155,7 +155,7 @@ abstract class Adapter(context: Context): RecyclerView.Adapter<RecyclerView.View
     }
 
     /**
-     * Determine when adapterPosition is section
+     * Determine whether adapterPosition is section
      */
     private fun isSection(position: Int): Boolean {
         if (position == 0) return true
@@ -172,6 +172,30 @@ abstract class Adapter(context: Context): RecyclerView.Adapter<RecyclerView.View
         return false
     }
 
+    /**
+     * Get item range in section
+     * todo: Get section from adapter position
+     */
+    fun rangeForItemsInSection(section: Int, sectionAdapterPosition: Int): Pair<Int, Int> {
+        return Pair(sectionAdapterPosition + 1, numberOfRowsIn(section))
+    }
+
+    /**
+     * Get index of a section header
+     */
+    fun indexForHeader(section: Int): Int {
+
+        if (section == 0) return 0
+
+        var index = 0
+
+        for (i in 0 until section){
+            index += 1 //count the section header
+            index += numberOfRowsIn(i)
+        }
+
+        return index
+    }
 }
 
 class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
